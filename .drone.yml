@@ -13,7 +13,7 @@ environment:
 steps:
 - name: configure-environment
   pull: always
-  image: ubuntu:latest
+  image: bitnami/git:2.39.2
   environment:
   SSH_PRIVATE_KEY:
     from_secret: dokku_ssh_key
@@ -32,11 +32,11 @@ steps:
   - chmod 600 ~/.ssh/id_rsa
   - apt-get update && apt-get install git -y
 - name: add-remote
-  image: ubuntu:latest
+  image: bitnami/git:2.39.2
   commands:
   - git remote add dokku dokku:$DOKKU_APP_NAME
 - name: push-to-dokku
-  image: ubuntu:latest
+  image: bitnami/git:2.39.2
   commands:
   - git push dokku $BRANCH
 
