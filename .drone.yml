@@ -2,28 +2,40 @@ kind: pipeline
 type: docker
 name: deploy
 
+environment:
+  BRANCH: main
+  DOKKU_HOST: apps1.fnukinternal.net
+  DOKKU_APP_NAME: dokku-ci-deploy
+  DOKKU_USER: dokku
+  SSH_PRIVATE_KEY:
+    from_secret: dokku_ssh_key
+  JUMP_HOST: 192.168.0.24
+  JUMP_USER: jumpuser
+  JUMP_PRIVATE_KEY:
+    from_secret: dokku_ssh_key
+
+image: ubuntu:latest
+
 steps:
-- name: deploy
-  image: dokku/ci-docker-image
+- name: configure-environment
   pull: always
-  environment:
-    DOKKU_HOST: apps1.fnukinternal.net
-    DOKKU_APP_NAME: dokku-ci-deploy
-    DOKKU_USERNAME: dokku
-    SSH_PRIVATE_KEY:
-      from_secret: dokku_ssh_key
-    JUMP_HOST: 192.168.0.24
-    JUMP_USER: jumpuser
-    JUMP_PRIVATE_KEY:
-      from_secret: dokku_ssh_key
   commands:
   - mkdir -p ~/.ssh
+  - echo -e "Host jump\n  Hostname $JUMP_HOST\n  User $JUMP_USER\n  IdentityFile ~/.ssh/id_rsa\n  StrictHostKeyChecking no" > ~/.ssh/config
+  - echo -e "Host dokku\n  Hostname $DOKKU_HOST\n  User $DOKKU_USER\n  IdentityFile ~/.ssh/id_rsa\n  ProxyCommand ssh -o 'StrictHostKeyChecking no' jump nc %h %p" >> ~/.ssh/config
+  - chmod 400 ~/.ssh/config
+  - echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config.jump
+  - echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config.dokku
+  - chmod 400 ~/.ssh/config.jump
+  - chmod 400 ~/.ssh/config.dokku
   - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa_jump
   - chmod 600 ~/.ssh/id_rsa_jump
-  - echo "Host $DOKKU_HOST" > ~/.ssh/config
-  - echo "  ProxyCommand ssh -W %h:%p $JUMP_USER@$JUMP_HOST -i ~/.ssh/id_rsa_jump" >> ~/.ssh/config
-  - dokku apps:create $DOKKU_APP_NAME
-  - dokku git:sync --force $DOKKU_APP_NAME
+- name: add-remote
+  commands:
+  - git remote add dokku dokku:$DOKKU_APP_NAME
+- name: push-to-dokku
+  commands:
+  - git push dokku $BRANCH
 
 trigger:
   branch:
