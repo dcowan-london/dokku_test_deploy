@@ -6,9 +6,6 @@ platform:
   os: linux
   arch: amd64
 
-pool:
-  use: ubuntu:latest
-
 environment:
   BRANCH: main
   DOKKU_HOST: apps1.fnukinternal.net
@@ -23,7 +20,7 @@ steps:
   image: bitnami/git:2.39.2
   volumes:
   - name: ssh
-    path: ~/.ssh
+    path: /root/.ssh
   environment:
     SSH_PRIVATE_KEY:
       from_secret: dokku_ssh_key
@@ -44,14 +41,14 @@ steps:
   image: bitnami/git:2.39.2
   volumes:
   - name: ssh
-    path: ~/.ssh
+    path: /root/.ssh
   commands:
   - git remote add dokku dokku:$DOKKU_APP_NAME
 - name: push-to-dokku
   image: bitnami/git:2.39.2
   volumes:
   - name: ssh
-    path: ~/.ssh
+    path: /root/.ssh
   commands:
   - ls -la ~/.ssh
   - git push dokku $BRANCH
