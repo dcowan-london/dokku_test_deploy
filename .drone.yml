@@ -33,7 +33,7 @@ steps:
   commands:
   - mkdir -p ~/.ssh
   - echo "Host jump\n  Hostname $JUMP_HOST\n  User $JUMP_USER\n  IdentityFile ~/.ssh/id_rsa\n  StrictHostKeyChecking no" | tee ~/.ssh/config
-  - echo "Host dokku\n  Hostname $DOKKU_HOST\n  User $DOKKU_USER\n  IdentityFile ~/.ssh/id_rsa\n  ProxyCommand ssh -o 'StrictHostKeyChecking no' jump nc %h %p" | tee -a ~/.ssh/config
+  - echo "Host dokku\n  Hostname $DOKKU_HOST\n  User $DOKKU_USER\n  IdentityFile ~/.ssh/id_rsa\n  StrictHostKeyChecking no\n  ProxyCommand ssh -o 'StrictHostKeyChecking no' jump nc %h %p" | tee -a ~/.ssh/config
   - chmod 400 ~/.ssh/config
   - echo "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" | tee ~/.ssh/config.jump
   - echo "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" | tee ~/.ssh/config.dokku
