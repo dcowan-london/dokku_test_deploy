@@ -32,11 +32,11 @@ steps:
       from_secret: dokku_ssh_key
   commands:
   - mkdir -p ~/.ssh
-  - echo -e "Host jump\n  Hostname $JUMP_HOST\n  User $JUMP_USER\n  IdentityFile ~/.ssh/id_rsa\n  StrictHostKeyChecking no" > ~/.ssh/config
-  - echo -e "Host dokku\n  Hostname $DOKKU_HOST\n  User $DOKKU_USER\n  IdentityFile ~/.ssh/id_rsa\n  ProxyCommand ssh -o 'StrictHostKeyChecking no' jump nc %h %p" >> ~/.ssh/config
+  - echo "Host jump\n  Hostname $JUMP_HOST\n  User $JUMP_USER\n  IdentityFile ~/.ssh/id_rsa\n  StrictHostKeyChecking no" | tee ~/.ssh/config
+  - echo "Host dokku\n  Hostname $DOKKU_HOST\n  User $DOKKU_USER\n  IdentityFile ~/.ssh/id_rsa\n  ProxyCommand ssh -o 'StrictHostKeyChecking no' jump nc %h %p" | tee -a ~/.ssh/config
   - chmod 400 ~/.ssh/config
-  - echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config.jump
-  - echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config.dokku
+  - echo "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" | tee ~/.ssh/config.jump
+  - echo "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" | tee ~/.ssh/config.dokku
   - chmod 400 ~/.ssh/config.jump
   - chmod 400 ~/.ssh/config.dokku
   - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa
