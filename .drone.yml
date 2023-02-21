@@ -6,6 +6,10 @@ platform:
   os: linux
   arch: amd64
 
+volumes:
+- name: ssh
+  temp: {}
+
 environment:
   BRANCH: main
   DOKKU_HOST: apps1.fnukinternal.net
