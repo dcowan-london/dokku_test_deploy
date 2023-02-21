@@ -30,6 +30,7 @@ steps:
   - chmod 400 ~/.ssh/config.dokku
   - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
+  - apt-get update && apt-get install git
 - name: add-remote
   image: ubuntu:latest
   commands:
