@@ -41,6 +41,13 @@ steps:
   - chmod 400 ~/.ssh/config.dokku
   - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
+- name: test-dump-sshconfig
+  image: ubuntu:latest
+  volumes:
+  - name: ssh
+    path: /root/.ssh
+  commands:
+  - cat ~/.ssh/config
 - name: add-remote
   image: bitnami/git:2.39.2
   volumes:
