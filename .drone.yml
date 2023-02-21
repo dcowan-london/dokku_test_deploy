@@ -48,8 +48,16 @@ steps:
     path: /root/.ssh
   commands:
   - git remote add dokku dokku:$DOKKU_APP_NAME
-  - ssh jump "echo 'Hello world'"
-  - ssh dokku "echo 'Hello world'"
+  - ssh jump "echo 'Host key added'"
+  - ssh dokku "echo 'Host key added'"
+- name: create-app
+  image: ubuntu
+  volumes:
+  - name: ssh
+    path: /root/.ssh
+  commands:
+  - ssh dokku apps:exists $DOKKU_APP_NAME
+  - if [ $? -eq 0 ]; then ssh dokku apps:create $DOKKU_APP_NAME; else echo "App already exists"; fi
 - name: push-to-dokku
   image: bitnami/git:2.39.2
   volumes:
