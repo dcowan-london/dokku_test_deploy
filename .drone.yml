@@ -51,7 +51,7 @@ steps:
   - ssh jump "echo 'Host key added'"
   - ssh dokku "echo 'Host key added'"
 - name: create-app
-  image: ubuntu
+  image: ubuntu:latest
   volumes:
   - name: ssh
     path: /root/.ssh
