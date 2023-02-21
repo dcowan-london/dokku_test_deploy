@@ -51,7 +51,7 @@ steps:
   - ssh jump "echo 'Host key added'"
   - ssh dokku "echo 'Host key added'"
 - name: create-app
-  image: ubuntu:latest
+  image: bitnami/git:2.39.2
   volumes:
   - name: ssh
     path: /root/.ssh
