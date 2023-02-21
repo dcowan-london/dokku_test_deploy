@@ -10,11 +10,10 @@ environment:
   JUMP_HOST: 192.168.0.24
   JUMP_USER: jumpuser
 
-image: ubuntu:latest
-
 steps:
 - name: configure-environment
   pull: always
+  image: ubuntu:latest
   environment:
   SSH_PRIVATE_KEY:
     from_secret: dokku_ssh_key
