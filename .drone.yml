@@ -21,7 +21,7 @@ environment:
 steps:
 - name: configure-environment
   pull: always
-  image: bitnami/git:2.39.2
+  image: ubuntu:latest
   volumes:
   - name: ssh
     path: /root/.ssh
