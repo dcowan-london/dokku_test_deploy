@@ -67,6 +67,13 @@ steps:
     path: /root/.ssh
   commands:
   - git push dokku $BRANCH
+- name: ssl-certs
+  image: bitnami/git:2.39.2
+  volumes:
+  - name: ssh
+    path: /root/.ssh
+  commands:
+  - ssh dokku dokku letsencrypt $DOKKU_APP_NAME
 
 trigger:
   branch:
