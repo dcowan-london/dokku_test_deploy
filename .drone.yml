@@ -41,13 +41,6 @@ steps:
   - chmod 400 ~/.ssh/config.dokku
   - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
-- name: test-dump-sshconfig
-  image: ubuntu:latest
-  volumes:
-  - name: ssh
-    path: /root/.ssh
-  commands:
-  - cat ~/.ssh/config
 - name: add-remote
   image: bitnami/git:2.39.2
   volumes:
@@ -55,13 +48,14 @@ steps:
     path: /root/.ssh
   commands:
   - git remote add dokku dokku:$DOKKU_APP_NAME
+  - ssh jump "echo 'Hello world'"
+  - ssh dokku "echo 'Hello world'"
 - name: push-to-dokku
   image: bitnami/git:2.39.2
   volumes:
   - name: ssh
     path: /root/.ssh
   commands:
-  - ls -la ~/.ssh
   - git push dokku $BRANCH
 
 trigger:
