@@ -1,25 +1,29 @@
 kind: pipeline
 type: docker
-name: deploy-to-dokku
+name: deploy
 
 steps:
-  - name: deploy
-    image: dokku/ci-docker-image
-    settings:
-      dokku_host: apps1.fnukinternal.net # replace with your Dokku host
-      dokku_app: dokku-ci-deploy # replace with your Dokku app name
-      dokku_key:
-        from_secret: dokku_ssh_key
-      dokku_git_remote: dokku@apps1.fnukinternal.net:dokku-ci-deploy
-      dokku_jump_host: 192.168.0.24 # replace with your jump host
-      dokku_jump_user: jumpuser # replace with the user to use on the jump host
-      dokku_jump_key:
-        from_secret: dokku_ssh_key
-      dokku_force_push: "true"
-      dokku_confirm: "true"
-      dokku_sync_networks: "true"
-      dokku_build_dir: "."
-      dokku_deploy_branch: main # replace with the branch you want to deploy
+- name: deploy
+  image: dokku/ci-docker-image
+  pull: always
+  environment:
+    DOKKU_HOST: apps1.fnukinternal.net
+    DOKKU_APP_NAME: dokku-ci-deploy
+    DOKKU_USERNAME: dokku
+    SSH_PRIVATE_KEY:
+      from_secret: dokku_ssh_key
+    JUMP_HOST: 192.168.0.24
+    JUMP_USER: jumpuser
+    JUMP_PRIVATE_KEY:
+      from_secret: dokku_ssh_key
+  commands:
+  - mkdir -p ~/.ssh
+  - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa_jump
+  - chmod 600 ~/.ssh/id_rsa_jump
+  - echo "Host dokku.example.com" > ~/.ssh/config
+  - echo "  ProxyCommand ssh -W %h:%p $JUMP_USER@$JUMP_HOST -i ~/.ssh/id_rsa_jump" >> ~/.ssh/config
+  - dokku apps:create $DOKKU_APP_NAME
+  - dokku git:sync --force $DOKKU_APP_NAME
 
 trigger:
   branch:
