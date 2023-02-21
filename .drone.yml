@@ -20,7 +20,7 @@ steps:
   - mkdir -p ~/.ssh
   - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa_jump
   - chmod 600 ~/.ssh/id_rsa_jump
-  - echo "Host dokku.example.com" > ~/.ssh/config
+  - echo "Host $DOKKU_HOST" > ~/.ssh/config
   - echo "  ProxyCommand ssh -W %h:%p $JUMP_USER@$JUMP_HOST -i ~/.ssh/id_rsa_jump" >> ~/.ssh/config
   - dokku apps:create $DOKKU_APP_NAME
   - dokku git:sync --force $DOKKU_APP_NAME
