@@ -8,11 +8,11 @@ environment:
   DOKKU_APP_NAME: dokku-ci-deploy
   DOKKU_USER: dokku
   SSH_PRIVATE_KEY:
-    from_secret: dokku_ssh_key
+  - from_secret: dokku_ssh_key
   JUMP_HOST: 192.168.0.24
   JUMP_USER: jumpuser
   JUMP_PRIVATE_KEY:
-    from_secret: dokku_ssh_key
+  - from_secret: dokku_ssh_key
 
 image: ubuntu:latest
 
