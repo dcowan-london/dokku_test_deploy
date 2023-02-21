@@ -6,7 +6,8 @@ platform:
   os: linux
   arch: amd64
 
-image: bitnami/git:2.39.2
+pool:
+  use: ubuntu:latest
 
 environment:
   BRANCH: main
@@ -19,11 +20,15 @@ environment:
 steps:
 - name: configure-environment
   pull: always
+  image: bitnami/git:2.39.2
+  volumes:
+  - name: ssh
+    path: ~/.ssh
   environment:
-  SSH_PRIVATE_KEY:
-    from_secret: dokku_ssh_key
-  JUMP_PRIVATE_KEY:
-    from_secret: dokku_ssh_key
+    SSH_PRIVATE_KEY:
+      from_secret: dokku_ssh_key
+    JUMP_PRIVATE_KEY:
+      from_secret: dokku_ssh_key
   commands:
   - mkdir -p ~/.ssh
   - echo -e "Host jump\n  Hostname $JUMP_HOST\n  User $JUMP_USER\n  IdentityFile ~/.ssh/id_rsa\n  StrictHostKeyChecking no" > ~/.ssh/config
@@ -37,9 +42,17 @@ steps:
   - chmod 600 ~/.ssh/id_rsa
   - apt-get update && apt-get install git -y
 - name: add-remote
+  image: bitnami/git:2.39.2
+  volumes:
+  - name: ssh
+    path: ~/.ssh
   commands:
   - git remote add dokku dokku:$DOKKU_APP_NAME
 - name: push-to-dokku
+  image: bitnami/git:2.39.2
+  volumes:
+  - name: ssh
+    path: ~/.ssh
   commands:
   - git push dokku $BRANCH
 
