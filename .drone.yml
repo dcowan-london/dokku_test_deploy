@@ -31,9 +31,11 @@ steps:
   - echo "$JUMP_PRIVATE_KEY" > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
 - name: add-remote
+  image: ubuntu:latest
   commands:
   - git remote add dokku dokku:$DOKKU_APP_NAME
 - name: push-to-dokku
+  image: ubuntu:latest
   commands:
   - git push dokku $BRANCH
 
