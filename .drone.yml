@@ -59,7 +59,7 @@ steps:
   - set +e
   - ssh dokku dokku apps:exists $DOKKU_APP_NAME
   - if [ $? -eq 0 ]; then ssh dokku dokku apps:create $DOKKU_APP_NAME; else echo "App already exists"; fi
-  - ssh dokku dokku config:set $DOKKU_APP_NAME NGINX_ROOT=dist
+  - ssh dokku dokku config:set $DOKKU_APP_NAME NGINX_ROOT=dist --no-restart
 - name: push-to-dokku
   image: bitnami/git:2.39.2
   volumes:
