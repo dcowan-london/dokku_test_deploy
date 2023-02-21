@@ -1,5 +1,7 @@
 # Svelte + Vite
 
+[![Build Status](https://droneci.fnukhosting.net/api/badges/dcowan/dokku_test_deploy/status.svg?ref=refs/heads/main)](https://droneci.fnukhosting.net/dcowan/dokku_test_deploy)
+
 This template should help get you started developing with Svelte in Vite.
 
 ## Recommended IDE Setup
