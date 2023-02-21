@@ -53,6 +53,7 @@ steps:
   - name: ssh
     path: ~/.ssh
   commands:
+  - ls -la ~/.ssh
   - git push dokku $BRANCH
 
 trigger:
