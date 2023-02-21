@@ -4,7 +4,7 @@ name: deploy-to-dokku
 
 steps:
   - name: deploy
-    image: plugins/dokku
+    image: dokku/ci-docker-image
     settings:
       dokku_host: apps1.fnukinternal.net # replace with your Dokku host
       dokku_app: dokku-ci-deploy # replace with your Dokku app name
